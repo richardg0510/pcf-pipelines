@@ -3,9 +3,9 @@ groups:
   jobs:
   - create-infrastructure
   - deploy-opsman
+  - configure-director
   - deploy-director
   - upload-ert
-  - configure-ert
   - deploy-ert
 - name: infra
   jobs:
@@ -13,11 +13,11 @@ groups:
 - name: opsman
   jobs:
   - deploy-opsman
+  - configure-director
   - deploy-director
 - name: ert
   jobs:
   - upload-ert
-  - configure-ert
   - deploy-ert
 - name: teardown
   jobs:
