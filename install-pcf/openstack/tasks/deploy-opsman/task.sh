@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 echo "$OPENSTACK_CA_CERT" > /ca.crt
 export OS_CACERT='/ca.crt'
 
