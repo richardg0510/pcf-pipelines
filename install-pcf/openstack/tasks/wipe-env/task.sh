@@ -1,51 +1,41 @@
 #!/bin/bash
+set -e
 
-function delete_admin_router() {
-   echo "Deleting router $ADMIN_ROUTER: "
-   neutron router-gateway-clear $ADMIN_ROUTER
-   neutron router-interface-delete $ADMIN_ROUTER ${INFRA_NETWORK}-subnet
-   neutron router-interface-delete $ADMIN_ROUTER ${ERT_NETWORK}-subnet
-   neutron router-interface-delete $ADMIN_ROUTER ${SERVICES_NETWORK}-subnet
-   neutron router-interface-delete $ADMIN_ROUTER ${DYNAMIC_SERVICES_NETWORK}-subnet
-   openstack router delete $ADMIN_ROUTER
-}
+root=$PWD
 
-function delete_networks() {
-  for net in $INFRA_NETWORK $DMZ_NETWORK $ERT_NETWORK $SERVICES_NETWORK $DYNAMIC_SERVICES_NETWORK
-  do
-    echo "Deleting network $net: "
-    neutron net-delete $net
-  done
-}
+source "${root}/pcf-pipelines/functions/check_opsman_available.sh"
 
-function delete_secgroup() {
-  echo "Deleting security group $SECURITY_GROUP: "
-  openstack security group delete $SECURITY_GROUP
-}
-
-function remove_opsman_floating_ip() {
-  echo "Removing floating IP ($OPSMAN_FLOATING_IP) from $OPSMAN_VM_NAME: "
-  openstack server remove floating ip $OPSMAN_VM_NAME $OPSMAN_FLOATING_IP
-}
-
-function delete_opsman() {
-  echo "Deleting $OPSMAN_VM_NAME vm: "
-  openstack server delete $OPSMAN_VM_NAME
-}
-
-function delete_opsman_installation() {
-  echo "Deleting PCF installation..."
+opsman_available=$(check_opsman_available $OPSMAN_URI)
+if [[ $opsman_available == "available" ]]; then
   om-linux \
-    --target "https://${OPSMAN_URI}" \
+    --target https://$OPSMAN_URI \
     --skip-ssl-validation \
     --username $OPSMAN_USERNAME \
     --password $OPSMAN_PASSWORD \
     delete-installation
-}
+fi
 
-delete_opsman_installation
-remove_opsman_floating_ip
-delete_opsman
-delete_admin_router
-delete_networks
-delete_secgroup
+echo "Deleting provisioned infrastructure..."
+terraform destroy -force \
+  -var "os_tenant_name=${OS_PROJECT_NAME}" \
+  -var "os_username=${OS_USERNAME}" \
+  -var "os_password=${OS_PASSWORD}" \
+  -var "os_auth_url=${OS_AUTH_URL}" \
+  -var "os_region=${OS_REGION_NAME}" \
+  -var "os_domain_name=${OS_USER_DOMAIN_NAME}" \
+  -var "prefix=dontcare" \
+  -var "infra_subnet_cidr=dontcare" \
+  -var "ert_subnet_cidr=dontcare" \
+  -var "services_subnet_cidr=dontcare" \
+  -var "dynamic_services_subnet_cidr=dontcare" \
+  -var "infra_dns=dontcare" \
+  -var "ert_dns=dontcare" \
+  -var "services_dns=dontcare" \
+  -var "dynamic_services_dns=dontcare" \
+  -var "external_network=dontcare" \
+  -var "external_network_id=dontcare" \
+  -var "opsman_image_name=dontcare" \
+  -var "opsman_public_key=dontcare" \
+  -state "$root/terraform-state/*.tfstate" \
+  -state-out $root/wipe-output/terraform.tfstate \
+  pcf-pipelines/install-pcf/gcp/terraform
