@@ -2,7 +2,10 @@
 
 set -eu
 
-until $(curl --output /dev/null -k --silent --head --fail https://$OPS_MGR_HOST/setup); do
+SETUP_ENDPOINT="https://$OPS_MGR_HOST/setup"
+
+printf "Connecting to $SETUP_ENDPOINT"
+until $(curl --output /dev/null -k --silent --head --fail $SETUP_ENDPOINT); do
     printf '.'
     sleep 5
 done
