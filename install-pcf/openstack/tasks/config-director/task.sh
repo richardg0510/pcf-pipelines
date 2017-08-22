@@ -131,12 +131,19 @@ read -r -d '' network_assignment <<EOF
 }
 EOF
 
-read -r -d '' security_configuration <<EOF
-{
-  "trusted_certificates": "$TRUSTED_CERTIFICATES",
-  "vm_password_type": "$VM_PASSWORD_TYPE"
-}
-EOF
+security_configuration=$(
+  echo "{}" |
+  jq \
+    --arg trusted_certificates "$TRUSTED_CERTIFICATES" \
+    --arg vm_password_type "$VM_PASSWORD_TYPE" \
+    '. +
+    {
+      "trusted_certificates" = $trusted_certificates,
+      "vm_password_type" = $vm_password_type
+    }
+    '
+)
+
 
 set -e
 
