@@ -27,7 +27,6 @@ ert_nw_azs: #CHANGEME               # Comma-separated list of AZs
 services_nw_azs: #CHANGEME          # Comma-separated list of AZs
 dynamic_services_nw_azs: #CHANGEME  # Comma-separated list of AZs
 
-admin_router: pcf-admin_router # Name to use for created router
 security_group: pcf-secgroup   # Name of security group to create/use
 
 # These are simply the project users credentials, downloaded from Horizon.
@@ -58,10 +57,7 @@ ert_major_minor_version: 1\.10\.*    # Minor version of Elastic Runtime to track
 
 # Ops Manager VM Settings
 opsman_image: ops-manager        # Prefix for the ops man glance image
-opsman_key: #CHANGEME            # Keypair name to use for ops man
 opsman_flavor: m1.xlarge         # Ops man VM flavor
-opsman_vm_name: opsman01         # Hostname for ops man VM
-opsman_floating_ip: #CHANGEME    # Must already be allocated to project
 opsman_uri: #CHANGEME            # FQDN to access Ops Manager without protocol (will use https), ex: opsmgr.example.com
 opsman_admin_username: admin     # Username for Ops Manager admin account
 opsman_admin_password: #CHANGEME # Password for Ops Manager admin account
@@ -206,3 +202,8 @@ loggregator_traffic_controller_instances: 1
 tcp_router_instances: 1
 syslog_adapter_instances: 3
 syslog_scheduler_instances: 1
+
+s3_endpoint:
+s3_output_bucket:
+tf_aws_access_key:
+tf_aws_secret_key:
