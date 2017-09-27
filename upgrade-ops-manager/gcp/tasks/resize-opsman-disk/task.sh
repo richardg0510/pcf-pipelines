@@ -2,10 +2,6 @@
 
 set -eu
 
-cat > cliaas-config/gcpcreds.json <<EOF
-${OPSMAN_GCP_CREDFILE_CONTENTS}
-EOF
-
 gcloud --project ${OPSMAN_PROJECT} auth activate-service-account --key-file cliaas-config/gcpcreds.json
 
 OPSMAN_EXTERNAL_IP=$(dig +short ${OPSMAN_DOMAIN_OR_IP_ADDRESS})
