@@ -2,7 +2,7 @@
 
 set -eu
 
-cat > cliaas-config/gcpcreds.json <<EOF
+cat > resize-opsman-disk/gcpcreds.json <<EOF
 ${OPSMAN_GCP_CREDFILE_CONTENTS}
 EOF
 
