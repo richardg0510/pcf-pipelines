@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 set -eu
 
 cat > cliaas-config/gcpcreds.json <<EOF
