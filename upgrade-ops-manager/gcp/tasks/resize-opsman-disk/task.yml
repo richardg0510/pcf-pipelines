@@ -18,4 +18,4 @@ params:
   OPSMAN_DISK_SIZE: 
 
 run:
-  path: pcf-pipelines/upgrade-ops-manager/gcp/tasks/resize-ops-manager-disk/task.sh
+  path: pcf-pipelines/upgrade-ops-manager/gcp/tasks/resize-opsman-disk/task.sh
