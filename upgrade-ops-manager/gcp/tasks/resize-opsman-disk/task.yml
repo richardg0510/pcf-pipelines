@@ -6,7 +6,6 @@ image_resource:
   source: {repository: czero/cflinuxfs2}
 
 inputs:
-  - name: cliaas-config
   - name: pcf-pipelines
   - name: opsmgr-settings
 
