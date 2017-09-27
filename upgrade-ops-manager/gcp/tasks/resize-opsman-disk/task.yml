@@ -9,7 +9,6 @@ image_resource:
 inputs:
   - name: pcf-pipelines
   - name: opsmgr-settings
-  - name: cliaas-config
   
 params:
   OPSMAN_DOMAIN_OR_IP_ADDRESS:
