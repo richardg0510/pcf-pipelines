@@ -2,11 +2,11 @@
 
 set -eu
 
-cat > resize-opsman-disk/gcpcreds.json <<EOF
+cat > gcpcreds.json <<EOF
 ${OPSMAN_GCP_CREDFILE_CONTENTS}
 EOF
 
-gcloud --project ${OPSMAN_PROJECT} auth activate-service-account --key-file resize-opsman-disk/gcpcreds.json
+gcloud --project ${OPSMAN_PROJECT} auth activate-service-account --key-file gcpcreds.json
 
 OPSMAN_EXTERNAL_IP=$(dig +short ${OPSMAN_DOMAIN_OR_IP_ADDRESS})
 OPSMAN_DISK_URI=$(gcloud --project ${OPSMAN_PROJECT} compute instances list --filter="networkInterfaces.accessConfigs.natIP=${OPSMAN_EXTERNAL_IP}" --format=json | jq '.[] .disks[] | select ( .boot == true ) .source')
