@@ -16,4 +16,4 @@ gcloud --project ${OPSMAN_PROJECT} compute instances list --filter="networkInter
 OPSMAN_NAME=$(jq --raw-output '.[] .name' ${OPSMAN_GCP_INSTANCE_INFO})
 OPSMAN_DISK_URI=$(jq --raw-output '.[] .disks[] | select ( .boot == true ) .source' ${OPSMAN_GCP_INSTANCE_INFO})
 gcloud --project ${OPSMAN_PROJECT} compute disks resize ${OPSMAN_DISK_URI} --zone ${OPSMAN_ZONE} --size=${OPSMAN_DISK_SIZE} --quiet
-gcloud --project ${OPSMAN_PROJECT} compute instance reset ${OPSMAN_NAME} --zone ${OPSMAN_ZONE} --quiet
+gcloud --project ${OPSMAN_PROJECT} compute instances reset ${OPSMAN_NAME} --zone ${OPSMAN_ZONE} --quiet
