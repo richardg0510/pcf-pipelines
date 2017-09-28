@@ -15,5 +15,5 @@ OPSMAN_EXTERNAL_IP=$(dig +short ${OPSMAN_DOMAIN_OR_IP_ADDRESS})
 gcloud --project ${OPSMAN_PROJECT} compute instances list --filter="networkInterfaces.accessConfigs.natIP=${OPSMAN_EXTERNAL_IP}" --format=json >> ${OPSMAN_GCP_INSTANCE_INFO}
 OPSMAN_NAME=$(jq --raw-output '.[] .name' ${OPSMAN_GCP_INSTANCE_INFO})
 OPSMAN_DISK_URI=$(jq --raw-output '.[] .disks[] | select ( .boot == true ) .source' ${OPSMAN_GCP_INSTANCE_INFO})
-gcloud --project ${OPSMAN_PROJECT} compute disks resize ${OPSMAN_DISK_URI} --zone ${OPSMAN_ZONE1} --size=${OPSMAN_DISK_SIZE} --quiet
-gcloud --project ${OPSMAN_PROJECT} compute instance reset ${OPSMAN_NAME} --zone ${OPSMAN_ZONE1} --quiet
+gcloud --project ${OPSMAN_PROJECT} compute disks resize ${OPSMAN_DISK_URI} --zone ${OPSMAN_ZONE} --size=${OPSMAN_DISK_SIZE} --quiet
+gcloud --project ${OPSMAN_PROJECT} compute instance reset ${OPSMAN_NAME} --zone ${OPSMAN_ZONE} --quiet
