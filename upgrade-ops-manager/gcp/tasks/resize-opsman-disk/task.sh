@@ -2,6 +2,8 @@
 
 set -eu
 
+sleep 10
+
 cat > gcpcreds.json <<EOF
 ${OPSMAN_GCP_CREDFILE_CONTENTS}
 EOF
