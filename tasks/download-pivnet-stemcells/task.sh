@@ -85,7 +85,13 @@ function download_stemcell_version_windows() {
   for product_file_id in $(pivnet-cli pfs -p stemcells-windows-server -r "$stemcell_version" --format json | jq .[].id); do
     local product_file_name
     product_file_name=$(pivnet-cli product-file -p stemcells-windows-server -r "$stemcell_version" -i "$product_file_id" --format=json | jq .name)
-    if echo "$product_file_name" | grep -iq "$IAAS_TYPE"; then
+    
+    IAAS_TYPE_WIN=$IAAS_TYPE
+    if echo "$IAAS_TYPE_WIN" | grep -iq "google"; then
+      IAAS_TYPE_WIN="GCP"
+    fi
+    
+    if echo "$product_file_name" | grep -iq "$IAAS_TYPE_WIN"; then
       pivnet-cli download-product-files -p stemcells-windows-server -r "$stemcell_version" -i "$product_file_id" -d "$download_dir" --accept-eula
       return 0
     fi
