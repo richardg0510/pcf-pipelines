@@ -56,6 +56,7 @@ function download_stemcell_version() {
   # ensure the stemcell version found in the manifest exists on pivnet
   if [[ $(pivnet-cli pfs -p stemcells -r "$stemcell_version") == *"release not found"* ]]; then
     download_stemcell_version_windows $stemcell_version
+    return 0
   fi
 
   # loop over all the stemcells for the specified version and then download it if it's for the IaaS we're targeting
