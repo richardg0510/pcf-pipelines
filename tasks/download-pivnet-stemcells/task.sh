@@ -55,7 +55,7 @@ function download_stemcell_version() {
 
   # ensure the stemcell version found in the manifest exists on pivnet
   if [[ $(pivnet-cli pfs -p stemcells -r "$stemcell_version") == *"release not found"* ]]; then
-    abort "Could not find the required stemcell version ${stemcell_version}. This version might not be published on PivNet yet, try again later."
+    download_stemcell_version_windows $stemcell_version
   fi
 
   # loop over all the stemcells for the specified version and then download it if it's for the IaaS we're targeting
@@ -64,6 +64,29 @@ function download_stemcell_version() {
     product_file_name=$(pivnet-cli product-file -p stemcells -r "$stemcell_version" -i "$product_file_id" --format=json | jq .name)
     if echo "$product_file_name" | grep -iq "$IAAS_TYPE"; then
       pivnet-cli download-product-files -p stemcells -r "$stemcell_version" -i "$product_file_id" -d "$download_dir" --accept-eula
+      return 0
+    fi
+  done
+
+  # shouldn't get here
+  abort "Could not find stemcell ${stemcell_version} for ${IAAS_TYPE}. Did you specify a supported IaaS type for this stemcell version?"
+}
+
+function download_stemcell_version_windows() {
+  local stemcell_version
+  stemcell_version="$1"
+
+  # ensure the stemcell version found in the manifest exists on pivnet
+  if [[ $(pivnet-cli pfs -p stemcells-windows-server -r "$stemcell_version") == *"release not found"* ]]; then
+    abort "Could not find the required stemcell version ${stemcell_version}. This version might not be published on PivNet yet, try again later."
+  fi
+
+  # loop over all the stemcells for the specified version and then download it if it's for the IaaS we're targeting
+  for product_file_id in $(pivnet-cli pfs -p stemcells-windows-server -r "$stemcell_version" --format json | jq .[].id); do
+    local product_file_name
+    product_file_name=$(pivnet-cli product-file -p stemcells-windows-server -r "$stemcell_version" -i "$product_file_id" --format=json | jq .name)
+    if echo "$product_file_name" | grep -iq "$IAAS_TYPE"; then
+      pivnet-cli download-product-files -p stemcells-windows-server -r "$stemcell_version" -i "$product_file_id" -d "$download_dir" --accept-eula
       return 0
     fi
   done
