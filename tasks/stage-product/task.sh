@@ -35,19 +35,9 @@ STAGED=$(om-linux \
 UNSTAGED_ALL=$(jq -n --argjson available "$AVAILABLE" --argjson staged "$STAGED" \
   '$available - ($staged | map({"name": .type, "product_version": .product_version}))')
 
-UNSTAGED_PRODUCT=$(
-jq -n "$UNSTAGED_ALL" \
-  "map(select(.name == \"$PRODUCT_NAME\")) | map(select(.product_version|startswith(\"$desired_version\")))"
-)
+UNSTAGED_PRODUCT=$(jq -n "$UNSTAGED_ALL" | jq -r '.[] | select(.name=="'"$PRODUCT_NAME"'")')
 
-# There should be only one such unstaged product.
-if [ "$(echo $UNSTAGED_PRODUCT | jq '. | length')" -ne "1" ]; then
-  echo "Need exactly one unstaged build for $PRODUCT_NAME version $desired_version"
-  jq -n "$UNSTAGED_PRODUCT"
-  exit 1
-fi
-
-full_version=$(echo "$UNSTAGED_PRODUCT" | jq -r '.[].product_version')
+full_version=$(echo "$UNSTAGED_PRODUCT" | jq -r '.product_version')
 
 om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
