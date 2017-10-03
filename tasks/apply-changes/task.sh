@@ -35,13 +35,12 @@ ACTION_STATUS=$?
 
 if [[ ${ACTION_STATUS} -ne 0 ]]; then
     echo "No pending changes to apply - exiting..."
-    exit 0
+else       
+     om-linux \
+       --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+       --skip-ssl-validation \
+       --username "${OPSMAN_USERNAME}" \
+       --password "${OPSMAN_PASSWORD}" \
+       apply-changes \
+       --ignore-warnings
 fi
-      
-om-linux \
-  --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-  --skip-ssl-validation \
-  --username "${OPSMAN_USERNAME}" \
-  --password "${OPSMAN_PASSWORD}" \
-  apply-changes \
-  --ignore-warnings
