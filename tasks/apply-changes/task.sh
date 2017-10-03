@@ -33,7 +33,7 @@ fi
 grep "action" changes-status.txt
 ACTION_STATUS=$?
 
-if [[ ${ACTION_STATUS} -ne 0 && ${RUNNING_STATUS} -ne 0 ]]; then
+if [[ ${ACTION_STATUS} -ne 0 ]]; then
     echo "No pending changes to apply - exiting..."
     exit 0
 fi
