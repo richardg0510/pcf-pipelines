@@ -18,6 +18,26 @@ set -eu
 
 echo "Applying changes on Ops Manager @ ${OPSMAN_DOMAIN_OR_IP_ADDRESS}"
 
+om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+     --skip-ssl-validation \
+     --username "${OPSMAN_USERNAME}" \
+     --password "${OPSMAN_PASSWORD}" \
+      curl -path /api/v0/staged/pending_changes > changes-status.txt
+
+if [[ $? -ne 0 ]]; then
+  echo "Could not login to ops man"
+  cat changes-status.txt
+  exit 1
+fi
+
+grep "action" changes-status.txt
+ACTION_STATUS=$?
+
+if [[ ${ACTION_STATUS} -ne 0 && ${RUNNING_STATUS} -ne 0 ]]; then
+    echo "No pending changes to apply - exiting..."
+    exit 0
+fi
+      
 om-linux \
   --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
   --skip-ssl-validation \
