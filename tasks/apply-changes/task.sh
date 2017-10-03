@@ -16,31 +16,47 @@ set -eu
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+POLL_INTERVAL=30
 echo "Applying changes on Ops Manager @ ${OPSMAN_DOMAIN_OR_IP_ADDRESS}"
 
-om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-     --skip-ssl-validation \
-     --username "${OPSMAN_USERNAME}" \
-     --password "${OPSMAN_PASSWORD}" \
-      curl -path /api/v0/staged/pending_changes > changes-status.txt
+APPLY=true
 
-if [[ $? -ne 0 ]]; then
-  echo "Could not login to ops man"
-  cat changes-status.txt
-  exit 1
-fi
+set +e
+while :
+do
 
-grep "action" changes-status.txt
-ACTION_STATUS=$?
+    om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+         --skip-ssl-validation \
+         --username "${OPSMAN_USERNAME}" \
+         --password "${OPSMAN_PASSWORD}" \
+          curl -path /api/v0/staged/pending_changes > changes-status.txt
 
-if [[ ${ACTION_STATUS} -ne 0 ]]; then
-    echo "No pending changes to apply - exiting..."
-else       
-     om-linux \
-       --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-       --skip-ssl-validation \
-       --username "${OPSMAN_USERNAME}" \
-       --password "${OPSMAN_PASSWORD}" \
-       apply-changes \
-       --ignore-warnings
+    if [[ $? -ne 0 ]]; then
+      echo "Could not login to ops man"
+      cat changes-status.txt
+      exit 1
+    fi
+
+    grep "action" changes-status.txt
+    ACTION_STATUS=$?
+
+    if [[ ${ACTION_STATUS} -ne 0 ]]; then
+      echo "No pending changes to apply - exiting..."
+      APPLY=false
+      exit 0
+    else
+      exit 0
+    fi
+    sleep $POLL_INTERVAL
+done
+set -e
+
+if APPLY; then
+  om-linux \
+    --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+    --skip-ssl-validation \
+    --username "${OPSMAN_USERNAME}" \
+    --password "${OPSMAN_PASSWORD}" \
+    apply-changes \
+    --ignore-warnings
 fi
