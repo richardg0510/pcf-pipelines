@@ -39,10 +39,12 @@ UNSTAGED_PRODUCT=$(jq -n "$UNSTAGED_ALL" | jq -r '.[] | select(.name=="'"$PRODUC
 
 full_version=$(echo "$UNSTAGED_PRODUCT" | jq -r '.product_version')
 
-om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-   --skip-ssl-validation \
-   --username "${OPSMAN_USERNAME}" \
-   --password "${OPSMAN_PASSWORD}" \
-   stage-product \
-   --product-name "${PRODUCT_NAME}" \
-   --product-version "${full_version}"
+if [ "$full_version" != "" ]; then
+  om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+     --skip-ssl-validation \
+     --username "${OPSMAN_USERNAME}" \
+     --password "${OPSMAN_PASSWORD}" \
+     stage-product \
+     --product-name "${PRODUCT_NAME}" \
+     --product-version "${full_version}"
+fi
