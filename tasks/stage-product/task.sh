@@ -35,7 +35,7 @@ STAGED=$(om-linux \
 UNSTAGED_ALL=$(jq -n --argjson available "$AVAILABLE" --argjson staged "$STAGED" \
   '$available - ($staged | map({"name": .type, "product_version": .product_version}))')
 
-UNSTAGED_PRODUCT=$(jq -n "$UNSTAGED_ALL" | jq -r '.[] | select(.name=="'"$PRODUCT_NAME"'")')
+UNSTAGED_PRODUCT=$(jq -n "$UNSTAGED_ALL" | jq -r '.[] | select(.name=="'"$PRODUCT_NAME"'") | select(.product_version|startswith("'"$desired_version"'"))')
 
 full_version=$(echo "$UNSTAGED_PRODUCT" | jq -r '.product_version')
 
