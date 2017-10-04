@@ -20,4 +20,4 @@ params:
   DEPLOY_SERVICE_BROKER_INSTANCES:
 
 run:
-  path: pipelines-repo/tasks/config-single-signon/task.sh
+  path: pcf-pipelines/tasks/config-tiles/config-single-sign-on/task.sh
