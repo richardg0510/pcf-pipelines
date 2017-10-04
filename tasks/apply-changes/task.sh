@@ -51,7 +51,7 @@ do
 done
 set -e
 
-if APPLY; then
+if [APPLY==true]; then
   om-linux \
     --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
     --skip-ssl-validation \
