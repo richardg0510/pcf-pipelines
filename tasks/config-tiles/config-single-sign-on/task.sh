@@ -38,7 +38,7 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
    --username "${OPSMAN_USERNAME}" \
    --password "${OPSMAN_PASSWORD}" \
-   configure-product 
-   --product-name $PRODUCT_NAME 
-   --product-network "$PRODUCT_NETWORK_CONFIG" 
+   configure-product \
+   --product-name $PRODUCT_NAME \
+   --product-network "$PRODUCT_NETWORK_CONFIG" \
    --product-resources "$PRODUCT_RESOURCE_CONFIG"
