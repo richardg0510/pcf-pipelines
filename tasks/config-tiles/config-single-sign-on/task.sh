@@ -34,4 +34,11 @@ PRODUCT_RESOURCE_CONFIG=$(cat <<-EOF
 EOF
 )
 
-$CMD -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPSMAN_USERNAME -p $OPSMAN_PASSWORD -k configure-product -n $PRODUCT_NAME -pn "$PRODUCT_NETWORK_CONFIG" -pr "$PRODUCT_RESOURCE_CONFIG"
+om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+   --skip-ssl-validation \
+   --username "${OPSMAN_USERNAME}" \
+   --password "${OPSMAN_PASSWORD}" \
+   configure-product 
+   --product-name $PRODUCT_NAME 
+   --product-network "$PRODUCT_NETWORK_CONFIG" 
+   --product-resources "$PRODUCT_RESOURCE_CONFIG"
