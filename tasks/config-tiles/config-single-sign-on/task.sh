@@ -24,21 +24,10 @@ PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
 EOF
 )
 
-PRODUCT_RESOURCE_CONFIG=$(cat <<-EOF
-{
-  "deploy-service-broker": {
-    "instance_type": {"id": "automatic"},
-    "instances": $DEPLOY_SERVICE_BROKER_INSTANCES
-  }
-}
-EOF
-)
-
 om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
    --username "${OPSMAN_USERNAME}" \
    --password "${OPSMAN_PASSWORD}" \
    configure-product \
    --product-name $PRODUCT_NAME \
-   --product-network "$PRODUCT_NETWORK_CONFIG" \
-   --product-resources "$PRODUCT_RESOURCE_CONFIG"
+   --product-network "$PRODUCT_NETWORK_CONFIG"
