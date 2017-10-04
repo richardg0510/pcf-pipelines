@@ -17,7 +17,6 @@ params:
   SINGLETON_JOB_AZ:
   OTHER_AZS:
   NETWORK_NAME:
-  DEPLOY_SERVICE_BROKER_INSTANCES:
 
 run:
   path: pcf-pipelines/tasks/config-tiles/config-single-sign-on/task.sh
