@@ -1,0 +1,27 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: czero/cflinuxfs2}
+
+inputs:
+  - name: pcf-pipelines
+  - name: pivnet-product
+
+params:
+  OPSMAN_USERNAME:
+  OPSMAN_PASSWORD:
+  OPSMAN_DOMAIN_OR_IP_ADDRESS:
+  PRODUCT_NAME:
+  SINGLETON_JOB_AZ:
+  OTHER_AZS:
+  NETWORK_NAME:
+  BROKER_MAX_INSTANCES:
+  BUILDPACK:
+  DISABLE_CERT_CHECK:
+  APP_PUSH_TIMEOUT:
+  ENABLE_GLOBAL_ACCESS:
+
+run:
+  path: pcf-pipelines/tasks/config-tiles/config-mysql/task.sh
