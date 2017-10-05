@@ -24,4 +24,4 @@ params:
   ENABLE_GLOBAL_ACCESS:
 
 run:
-  path: pcf-pipelines/tasks/config-tiles/config-mysql/task.sh
+  path: pcf-pipelines/tasks/config-tiles/config-spring-cloud-services/task.sh
