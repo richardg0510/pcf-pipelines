@@ -427,4 +427,4 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --password "${OPSMAN_PASSWORD}" \
    configure-product \
    --product-name $PRODUCT_NAME \
-   --product-properties "$BACKUP_OPTIONS_PROPERTIES" \
+   --product-properties "$OPTIONAL_PROTECTIONS_PROPERTIES" \
