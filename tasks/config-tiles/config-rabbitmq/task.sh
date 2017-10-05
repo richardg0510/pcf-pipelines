@@ -27,14 +27,6 @@ PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
 EOF
 )
 
-om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
-   --skip-ssl-validation \
-   --username "${OPSMAN_USERNAME}" \
-   --password "${OPSMAN_PASSWORD}" \
-   configure-product \
-   --product-name $PRODUCT_NAME \
-   --product-network "$PRODUCT_NETWORK_CONFIG"
-
 PRODUCT_PROPERTIES=$(cat <<-EOF
 {
   ".properties.metrics_polling_interval": {
@@ -168,6 +160,7 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    configure-product \
    --product-name $PRODUCT_NAME \
    --product-properties "$PRODUCT_PROPERTIES" \
+   --product-network "$PRODUCT_NETWORK_CONFIG"
    --product-resources "$PRODUCT_RESOURCE_CONFIG"
 
 if [[ "$SYSLOG_SELECTOR" == "enabled" ]]; then
