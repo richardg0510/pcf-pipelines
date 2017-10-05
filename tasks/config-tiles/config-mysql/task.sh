@@ -18,8 +18,20 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
   ".mysql.metrics_polling_frequency": {
     "value": "$METRICS_POLLING_FREQUENCY"
   },
+  ".cf-mysql-broker.quota_enforcer_pause": {
+    "value": "$QUOTA_ENFORCER_PAUSE"
+  },
   ".mysql.cluster_probe_timeout": {
     "value": "$CLUSTER_PROBE_TIMEOUT"
+  },
+  ".cf-mysql-broker.allow_table_locks": {
+    "value": "$ALLOW_TABLE_LOCKS"
+  },
+  ".mysql.innodb_large_prefix_enabled": {
+    "value": "$ENABLE_LARGE_INDICES"
+  },
+  ".mysql.wsrep_debug": {
+    "value": "$ENABLE_REPLICATION_DEBUG_LOGGING"
   },
   ".mysql.tmp_table_size": {
     "value": "$TMP_TABLE_SIZE"
@@ -42,8 +54,14 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
   ".mysql.innodb_strict_mode": {
     "value": "$INNODB_STRICT_MODE"
   },
+  ".mysql.allow_local_infile": {
+    "value": "$ALLOW_LOCAL_INFILE"
+  },
   ".mysql.cli_history": {
     "value": "$ALLOW_CLI_HISTORY"
+  },
+  ".mysql.skip_name_resolve": {
+    "value": "$DISABLE_REVERSE_DNS_LOOKUPS"
   },
   ".mysql.allow_remote_admin_access": {
     "value": "$ALLOW_REMOTE_ADMIN_ACCESS"
@@ -390,7 +408,7 @@ OPTIONAL_PROTECTIONS_PROPERTIES=$(cat <<-EOF
     "value": "$OPTIONAL_PROTECTIONS"
   },
   ".properties.optional_protections.enable.recipient_email": {
-    "value": "$RECEPIENT_EMAIL"
+    "value": "$RECIPIENT_EMAIL"
   },
   ".properties.optional_protections.enable.prevent_auto_rejoin": {
     "value": "$PREVENT_AUTO_JOIN"
