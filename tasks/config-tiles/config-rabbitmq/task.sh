@@ -138,37 +138,13 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
 EOF
 )
 
-PRODUCT_RESOURCE_CONFIG=$(cat <<-EOF
-{
-  "rabbitmq-server": {
-    "instance_type": {"id": "automatic"},
-    "instances": $RMQ_SERVER_INSTANCES,
-    "persistent_disk": {"size_mb":"$RMQ_SERVER_NODE_PERSISTENT_DISK_SIZE"}
-  },
-  "rabbitmq-haproxy": {
-    "instance_type": {"id": "automatic"},
-    "instances": $RMQ_HAPROXY_INSTANCES
-  },
-  "rabbitmq-broker": {
-    "instance_type": {"id": "automatic"},
-    "instances": $RMQ_BROKER_INSTANCES
-  },
-  "on-demand-broker": {
-    "instance_type": {"id": "automatic"},
-    "instances": $RMQ_ONDEMAND_INSTANCES
-  }
-}
-EOF
-)
-
 om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
    --username "${OPSMAN_USERNAME}" \
    --password "${OPSMAN_PASSWORD}" \
    configure-product \
    --product-name $PRODUCT_NAME \
-   --product-properties "$PRODUCT_PROPERTIES" \
-   --product-resources "$PRODUCT_RESOURCE_CONFIG"
+   --product-properties "$PRODUCT_PROPERTIES"
 
 if [[ "$SYSLOG_SELECTOR" == "enabled" ]]; then
 SYSLOG_PROPERTIES=$(cat <<-EOF
