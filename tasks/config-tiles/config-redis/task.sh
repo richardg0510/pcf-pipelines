@@ -45,27 +45,6 @@ PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
 EOF
 )
 
-PRODUCT_RESOURCE_CONFIG=$(cat <<-EOF
-{
-  "redis-on-demand-broker": {
-    "instance_type": {"id": "automatic"},
-    "instances": $REDIS_ON_DEMAND_BROKER_INSTANCES,
-    "persistent_disk": {"size_mb":"$REDIS_ON_DEMAND_BROKER_DISK_SIZE"}
-  },
-  "cf-redis-broker": {
-    "instance_type": {"id": "automatic"},
-    "instances": $CF_REDIS_BROKER_INSTANCES,
-    "persistent_disk": {"size_mb":"$CF_REDIS_BROKER_DISK_SIZE"}
-  },
-  "dedicated-node": {
-    "instance_type": {"id": "automatic"},
-    "instances": $DEDICATED_NODE_INSTANCES,
-    "persistent_disk": {"size_mb":"$DEDICATED_NODE_DISK_SIZE"}
-  }
-}
-EOF
-)
-
 om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
    --username "${OPSMAN_USERNAME}" \
@@ -73,8 +52,7 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    configure-product \
    --product-name $PRODUCT_NAME \
    --product-properties "$PRODUCT_PROPERTIES" \
-   --product-network "$PRODUCT_NETWORK_CONFIG" \
-   --product-resources "$PRODUCT_RESOURCE_CONFIG"
+   --product-network "$PRODUCT_NETWORK_CONFIG"
 
 
 if [[ "$SYSLOG_SELECTOR" == "Yes" ]]; then
