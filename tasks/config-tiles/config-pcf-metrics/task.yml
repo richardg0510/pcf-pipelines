@@ -34,9 +34,6 @@ params:
   MYSQL_PROXY_INSTANCE_TYPE:
   MYSQL_PROXY_INSTANCES:
 
-inputs:
-  - name: pipelines-repo
-  - name: om-cli
 
 run:
   path: pcf-pipelines/tasks/config-tiles/config-pcf-metrics/task.sh
