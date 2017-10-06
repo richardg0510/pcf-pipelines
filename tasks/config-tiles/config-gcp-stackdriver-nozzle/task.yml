@@ -1,0 +1,29 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source: {repository: czero/cflinuxfs2}
+
+inputs:
+  - name: pcf-pipelines
+  - name: pivnet-product
+
+params:
+  OPSMAN_USERNAME:
+  OPSMAN_PASSWORD:
+  OPSMAN_DOMAIN_OR_IP_ADDRESS:
+  PRODUCT_NAME:
+  SINGLETON_JOB_AZ:
+  OTHER_AZS:
+  NETWORK_NAME:
+  FIREHOST_ENDPOINT:
+  FIREHOST_EVENTS:
+  FIREHOST_USERNAME:
+  FIREHOST_PASSWORD:
+  FIREHOST_SKIP_SSL:
+  SERVICE_ACCOUNT:
+  PROJECT_ID:
+
+run:
+  path: pcf-pipelines/tasks/config-tiles/config-gcp-stackdriver-nozzle/task.sh
