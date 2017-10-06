@@ -51,5 +51,5 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --password "${OPSMAN_PASSWORD}" \
    configure-product \
    --product-name $PRODUCT_NAME \
-   --product-properties "$PRODUCT_PROPERTIES" \
+   --product-properties "$PROPERTIES_CONFIG" \
    --product-network "$PRODUCT_NETWORK_CONFIG"
