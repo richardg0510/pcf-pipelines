@@ -414,7 +414,6 @@ VM_OPTIONS_PROPERTIES=$(cat <<-EOF
 }
 EOF
 )
-fi
 
 om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    --skip-ssl-validation \
@@ -423,3 +422,4 @@ om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
    configure-product \
    --product-name $PRODUCT_NAME \
    --product-properties "$VM_OPTIONS_PROPERTIES"
+fi
