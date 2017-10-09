@@ -29,15 +29,15 @@ for errand in $ERRANDS
    echo $ERRAND_EXISTS
 
    if [[ ! -z "$ERRAND_EXISTS" ]]; then
-     echo $errand " errand found... and disabling..."
+     echo $errand " errand found... setting to when-changed..."
 
      om-linux --target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
         --skip-ssl-validation \
         --username "${OPSMAN_USERNAME}" \
         --password "${OPSMAN_PASSWORD}" \
         set-errand-state \
-        --product-name $PRODUCT_NAME
-        --errand-name $errand \
+        --product-name $PRODUCT_NAME \
+        --errand-name "${errand}" \
         --post-deploy-state when-changed
    else
      echo $i " errand not found... skipping..."
