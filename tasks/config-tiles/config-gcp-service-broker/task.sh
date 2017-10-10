@@ -12,7 +12,7 @@ BALANCE_JOB_AZS=$(fn_other_azs $OTHER_AZS)
 PRODUCT_PROPERTIES=$(cat <<-EOF
 {
   ".properties.root_service_account_json": {
-    "value": $ROOT_SERVICE_ACCOUNT_JSON
+    "value": "$ROOT_SERVICE_ACCOUNT_JSON"
   },
   ".properties.db_host": {
     "value": "$DB_HOST"
