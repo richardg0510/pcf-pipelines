@@ -9,34 +9,43 @@ function fn_other_azs {
 
 BALANCE_JOB_AZS=$(fn_other_azs $OTHER_AZS)
 
-PRODUCT_PROPERTIES=$(cat <<-EOF
-{
-  ".properties.root_service_account_json": {
-    "value": "$ROOT_SERVICE_ACCOUNT_JSON"
-  },
-  ".properties.db_host": {
-    "value": "$DB_HOST"
-  },
-  ".properties.db_username": {
-    "value": "$DB_USERNAME"
-  },
-  ".properties.db_password": {
-    "value": "$DB_PASSWORD"
-  },
-  ".properties.db_port": {
-    "value": "$DB_PORT"
-  },
-  ".properties.ca_cert": {
-    "value": "$CA_CERT"
-  },
-  ".properties.client_cert": {
-    "value": "$CLIENT_CERT"
-  },
-  ".properties.client_key": {
-    "value": "$CLIENT_KEY"
-  }
-}
-EOF
+PRODUCT_PROPERTIES=$(
+  jq -n \
+    --arg root_service_account_json "$ROOT_SERVICE_ACCOUNT_JSON" \
+    --arg db_host "$DB_HOST" \
+    --arg db_username "$DB_USERNAME" \
+    --arg db_password "$DB_PASSWORD" \
+    --arg db_port "$DB_PORT" \
+    --arg ca_cert "$CA_CERT" \
+    --arg client_cert "$CLIENT_CERT" \
+    --arg client_key "$CLIENT_KEY" \
+    '
+    {
+      ".properties.root_service_account_json": {
+        "value": $root_service_account_json
+      },
+      ".properties.db_host": {
+        "value": $db_host
+      },
+      ".properties.db_username": {
+        "value": $db_username
+      },
+      ".properties.db_password": {
+        "value": $db_password
+      },
+      ".properties.db_port": {
+        "value": $db_port
+      },
+      ".properties.ca_cert": {
+        "value": $ca_cert
+      },
+      ".properties.client_cert": {
+        "value": $client_cert
+      },
+      ".properties.client_key": {
+        "value": $client_key
+      }
+    '
 )
 
 PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
