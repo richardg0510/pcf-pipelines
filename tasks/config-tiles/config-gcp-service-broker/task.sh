@@ -41,7 +41,10 @@ PRODUCT_PROPERTIES=$(
       },
       ".properties.client_key": {
         "value": $client_key
-      }
+      },
+      ".properties.db_password": {
+        "value": $db_password
+      }      
     }
     '
 )
