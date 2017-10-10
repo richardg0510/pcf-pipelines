@@ -34,7 +34,7 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
   },
   ".properties.client_key": {
     "value": "$CLIENT_KEY"
-  },
+  }
 }
 EOF
 )
