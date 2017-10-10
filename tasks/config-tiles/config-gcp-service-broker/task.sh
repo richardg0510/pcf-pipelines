@@ -30,6 +30,11 @@ PRODUCT_PROPERTIES=$(
       ".properties.db_username": {
         "value": $db_username
       },
+      ".properties.db_password": {
+        "value": {
+          "secret": $db_password
+        }
+      },
       ".properties.db_port": {
         "value": $db_port
       },
@@ -41,10 +46,7 @@ PRODUCT_PROPERTIES=$(
       },
       ".properties.client_key": {
         "value": $client_key
-      },
-      ".properties.db_password": {
-        "value": $db_password
-      }      
+      }    
     }
     '
 )
