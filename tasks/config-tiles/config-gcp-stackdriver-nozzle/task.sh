@@ -26,8 +26,8 @@ PRODUCT_PROPERTIES=$(
       ".properties.firehose_username": {
         "value": $firehose_username
       },
-      ".properties.db_username": {
-        "value": $db_username
+      ".properties.firehose_username": {
+        "value": $firehose_username
       },
       ".properties.firehose_password": {
         "value": {
