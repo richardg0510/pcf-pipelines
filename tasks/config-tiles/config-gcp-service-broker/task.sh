@@ -30,9 +30,6 @@ PRODUCT_PROPERTIES=$(
       ".properties.db_username": {
         "value": $db_username
       },
-      ".properties.db_password": {
-        "value": $db_password
-      },
       ".properties.db_port": {
         "value": $db_port
       },
