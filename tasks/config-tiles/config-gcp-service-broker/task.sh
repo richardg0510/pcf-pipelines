@@ -45,6 +45,7 @@ PRODUCT_PROPERTIES=$(
       ".properties.client_key": {
         "value": $client_key
       }
+    }
     '
 )
 
