@@ -9,31 +9,42 @@ function fn_other_azs {
 
 BALANCE_JOB_AZS=$(fn_other_azs $OTHER_AZS)
 
-PRODUCT_PROPERTIES=$(cat <<-EOF
-{
-  ".properties.firehose_endpoint": {
-    "value": "$FIREHOSE_ENDPOINT"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$FIREHOSE_EVENTS"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$FIREHOSE_USERNAME"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$FIREHOSE_PASSWORD"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$FIREHOSE_SKIP_SSL"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$SERVICE_ACCOUNT"
-  },
-  ".properties.firehose_endpoint": {
-    "value": "$PROJECT_ID"
-  },
-}
-EOF
+PRODUCT_PROPERTIES=$(
+  jq -n \
+    --arg firehose_endpoint "$FIREHOSE_ENDPOINT" \
+    --arg firehose_events "$FIREHOSE_EVENTS" \
+    --arg firehose_username "$FIREHOSE_USERNAME" \
+    --arg firehose_password "$FIREHOSE_PASSWORD" \
+    --arg firehose_skip_ssl "$FIREHOSE_SKIP_SSL" \
+    --arg service_account "$SERVICE_ACCOUNT" \
+    --arg project_id "$PROJECT_ID" \
+    '
+    {
+      ".properties.firehose_endpoint": {
+        "value": $firehose_endpoint
+      },
+      ".properties.firehose_username": {
+        "value": $firehose_username
+      },
+      ".properties.db_username": {
+        "value": $db_username
+      },
+      ".properties.firehose_password": {
+        "value": {
+          "secret": $firehose_password
+        }
+      },
+      ".properties.firehose_skip_ssl": {
+        "value": $firehose_skip_ssl
+      },
+      ".properties.service_account": {
+        "value": $service_account
+      },
+      ".properties.project_id": {
+        "value": $project_id
+      }
+    }
+    '
 )
 
 PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
