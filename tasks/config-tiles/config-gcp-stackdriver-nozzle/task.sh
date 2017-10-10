@@ -12,19 +12,19 @@ BALANCE_JOB_AZS=$(fn_other_azs $OTHER_AZS)
 PRODUCT_PROPERTIES=$(cat <<-EOF
 {
   ".properties.firehose_endpoint": {
-    "value": "$FIREHOST_ENDPOINT"
+    "value": "$FIREHOSE_ENDPOINT"
   },
   ".properties.firehose_endpoint": {
-    "value": "$FIREHOST_EVENTS"
+    "value": "$FIREHOSE_EVENTS"
   },
   ".properties.firehose_endpoint": {
-    "value": "$FIREHOST_USERNAME"
+    "value": "$FIREHOSE_USERNAME"
   },
   ".properties.firehose_endpoint": {
-    "value": "$FIREHOST_PASSWORD"
+    "value": "$FIREHOSE_PASSWORD"
   },
   ".properties.firehose_endpoint": {
-    "value": "$FIREHOST_SKIP_SSL"
+    "value": "$FIREHOSE_SKIP_SSL"
   },
   ".properties.firehose_endpoint": {
     "value": "$SERVICE_ACCOUNT"
@@ -35,14 +35,6 @@ PRODUCT_PROPERTIES=$(cat <<-EOF
 }
 EOF
 )
-
-FIREHOST_ENDPOINT: ((firehose_endpoint))
-FIREHOST_EVENTS: ((firehose_events))
-FIREHOST_USERNAME: ((firehose_username))
-FIREHOST_PASSWORD: ((firehose_password))
-FIREHOST_SKIP_SSL: ((firehose_skip_ssl))
-SERVICE_ACCOUNT: ((service_account))
-PROJECT_ID: ((project_id))
 
 PRODUCT_NETWORK_CONFIG=$(cat <<-EOF
 {
