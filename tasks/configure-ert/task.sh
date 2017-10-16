@@ -1,14 +1,14 @@
 #!/bin/bash
 set -eu
 
-export OPSMAN_DOMAIN_OR_IP_ADDRESS="opsman.$pcf_ert_domain"
+export OPSMAN_DOMAIN_OR_IP_ADDRESS="opsmgr.$pcf_ert_domain"
 
 source pcf-pipelines/functions/generate_cert.sh
 
 if [[ ${pcf_ert_ssl_cert} == "" || ${pcf_ert_ssl_cert} == "generate" ]]; then
   domains=(
-    "*.sys.${pcf_ert_domain}"
-    "*.cfapps.${pcf_ert_domain}"
+    "*.system.${pcf_ert_domain}"
+    "*.apps.${pcf_ert_domain}"
   )
 
   certificates=$(generate_cert "${domains[*]}")
@@ -17,9 +17,9 @@ if [[ ${pcf_ert_ssl_cert} == "" || ${pcf_ert_ssl_cert} == "generate" ]]; then
 fi
 
 saml_domains=(
-  "*.sys.${pcf_ert_domain}"
-  "*.login.sys.${pcf_ert_domain}"
-  "*.uaa.sys.${pcf_ert_domain}"
+  "*.system.${pcf_ert_domain}"
+  "*.login.system.${pcf_ert_domain}"
+  "*.uaa.system.${pcf_ert_domain}"
 )
 
 saml_certificates=$(generate_cert "${saml_domains[*]}")
@@ -73,49 +73,63 @@ cf_resources=$(
     --arg iaas $pcf_iaas \
     '
     {
-      "consul_server": {"internet_connected": false},
-      "nats": {"internet_connected": false},
-      "etcd_tls_server": {"internet_connected": false},
-      "nfs_server": {"internet_connected": false},
+      "consul_server": {"internet_connected": true},
+      "nats": {"internet_connected": true},
+      "etcd_tls_server": {"internet_connected": true},
       "mysql_proxy": {
         "instances": 0,
-        "internet_connected": false
+        "internet_connected": true
       },
       "mysql": {
         "instances": 0,
-        "internet_connected": false
+        "internet_connected": true
       },
-      "backup-prepare": {"internet_connected": false},
-      "ccdb": {"internet_connected": false},
-      "diego_database": {"internet_connected": false},
-      "uaadb": {"internet_connected": false},
-      "uaa": {"internet_connected": false},
-      "cloud_controller": {"internet_connected": false},
-      "ha_proxy": {"internet_connected": false},
-      "router": {"internet_connected": false},
+      "backup-prepare": {
+        "instances": 0,
+        "internet_connected": true
+      },
+      "ccdb": {
+        "instances": 0,
+        "internet_connected": true
+      },
+      "diego_database": {"internet_connected": true},
+      "uaadb": {
+        "instances": 0,
+        "internet_connected": true
+      },
+      "uaa": {"internet_connected": true},
+      "cloud_controller": {"internet_connected": true},
+      "ha_proxy": {
+        "instances": 0,
+        "internet_connected": true
+      },
+      "router": {"internet_connected": true},
       "mysql_monitor": {
         "instances": 0,
-        "internet_connected": false
+        "internet_connected": true
       },
-      "clock_global": {"internet_connected": false},
-      "cloud_controller_worker": {"internet_connected": false},
-      "diego_brain": {"internet_connected": false},
-      "diego_cell": {"internet_connected": false},
-      "loggregator_trafficcontroller": {"internet_connected": false},
-      "syslog_adapter": {"internet_connected": false},
-      "syslog_scheduler": {"internet_connected": false},
-      "doppler": {"internet_connected": false},
-      "tcp_router": {"internet_connected": false},
-      "smoke-tests": {"internet_connected": false},
-      "push-apps-manager": {"internet_connected": false},
-      "notifications": {"internet_connected": false},
-      "notifications-ui": {"internet_connected": false},
-      "push-pivotal-account": {"internet_connected": false},
-      "autoscaling": {"internet_connected": false},
-      "autoscaling-register-broker": {"internet_connected": false},
-      "nfsbrokerpush": {"internet_connected": false},
-      "bootstrap": {"internet_connected": false},
-      "mysql-rejoin-unsafe": {"internet_connected": false}
+      "clock_global": {"internet_connected": true},
+      "cloud_controller_worker": {"internet_connected": true},
+      "diego_brain": {"internet_connected": true},
+      "diego_cell": {"internet_connected": true},
+      "loggregator_trafficcontroller": {"internet_connected": true},
+      "syslog_adapter": {"internet_connected": true},
+      "syslog_scheduler": {"internet_connected": true},
+      "doppler": {"internet_connected": true},
+      "tcp_router": {
+        "instances": 0,
+        "internet_connected": true
+      },
+      "smoke-tests": {"internet_connected": true},
+      "push-apps-manager": {"internet_connected": true},
+      "notifications": {"internet_connected": true},
+      "notifications-ui": {"internet_connected": true},
+      "push-pivotal-account": {"internet_connected": true},
+      "autoscaling": {"internet_connected": true},
+      "autoscaling-register-broker": {"internet_connected": true},
+      "nfsbrokerpush": {"internet_connected": true},
+      "bootstrap": {"internet_connected": true},
+      "mysql-rejoin-unsafe": {"internet_connected": true}
     }
 
     |
@@ -143,7 +157,12 @@ cf_properties=$(
     --arg private_key_pem "$pcf_ert_ssl_key" \
     --arg saml_cert_pem "$saml_cert_pem" \
     --arg saml_key_pem "$saml_key_pem" \
-    --arg iaas $pcf_iaas \
+    --arg haproxy_forward_tls "$HAPROXY_FORWARD_TLS" \
+    --arg haproxy_backend_ca "$HAPROXY_BACKEND_CA" \
+    --arg router_tls_ciphers "$ROUTER_TLS_CIPHERS" \
+    --arg haproxy_tls_ciphers "$HAPROXY_TLS_CIPHERS" \
+    --arg routing_disable_http "$routing_disable_http" \
+    --arg iaas "$pcf_iaas" \
     --arg pcf_ert_domain "$pcf_ert_domain" \
     --arg mysql_monitor_recipient_email "$mysql_monitor_recipient_email" \
     --arg db_host "$db_host" \
@@ -190,15 +209,16 @@ cf_properties=$(
     --arg mysql_backups_s3_access_key_id "$MYSQL_BACKUPS_S3_ACCESS_KEY_ID" \
     --arg mysql_backups_s3_secret_access_key "$MYSQL_BACKUPS_S3_SECRET_ACCESS_KEY" \
     --arg mysql_backups_s3_cron_schedule "$MYSQL_BACKUPS_S3_CRON_SCHEDULE" \
+    --arg smtp_address "$smtp_address" \
+    --arg smtp_from "$smtp_from" \
+    --arg smtp_address "$smtp_address" \
+    --arg smtp_port "$smtp_port" \
+    --arg smtp_user "$smtp_user" \
+    --arg smtp_password "$smtp_password" \
+    --arg smtp_auth_mechanism "$smtp_auth_mechanism" \
+    --arg company "$COMPANY"\
     '
     {
-      ".properties.networking_point_of_entry": { "value": "external_ssl" },
-      ".properties.networking_point_of_entry.external_ssl.ssl_rsa_certificate": {
-        "value": {
-          "cert_pem": $cert_pem,
-          "private_key_pem": $private_key_pem
-        }
-      },
       ".uaa.service_provider_key_credentials": {
         "value": {
           "cert_pem": $saml_cert_pem,
@@ -207,8 +227,8 @@ cf_properties=$(
       },
       ".properties.tcp_routing": { "value": "disable" },
       ".properties.route_services": { "value": "enable" },
-      ".ha_proxy.skip_cert_verify": { "value": true },
-      ".properties.route_services.enable.ignore_ssl_cert_verification": { "value": true },
+      ".ha_proxy.skip_cert_verify": { "value": false },
+      ".properties.route_services.enable.ignore_ssl_cert_verification": { "value": false },
       ".properties.security_acknowledgement": { "value": "X" },
       ".properties.system_database": { "value": "external" },
       ".properties.system_database.external.port": { "value": "3306" },
@@ -240,12 +260,12 @@ cf_properties=$(
       ".properties.uaa_database.external.port": { "value": "3306" },
       ".properties.uaa_database.external.uaa_username": { "value": $db_uaa_username },
       ".properties.uaa_database.external.uaa_password": { "value": { "secret": $db_uaa_password } },
-      ".cloud_controller.system_domain": { "value": "sys.\($pcf_ert_domain)" },
-      ".cloud_controller.apps_domain": { "value": "cfapps.\($pcf_ert_domain)" },
+      ".cloud_controller.system_domain": { "value": "system.\($pcf_ert_domain)" },
+      ".cloud_controller.apps_domain": { "value": "apps.\($pcf_ert_domain)" },
       ".cloud_controller.allow_app_ssh_access": { "value": true },
       ".cloud_controller.security_event_logging_enabled": { "value": true },
       ".router.disable_insecure_cookies": { "value": false },
-      ".push-apps-manager.company_name": { "value": "pcf-\($iaas)" },
+      ".push-apps-manager.company_name": { "value": $company },
       ".mysql_monitor.recipient_email": { "value" : $mysql_monitor_recipient_email }
     }
 
@@ -320,6 +340,52 @@ cf_properties=$(
         ".properties.mysql_backups": {"value": "disable"}
       }
     end
+
+    +
+
+    # SMTP Configuration
+    if $smtp_address != "" then
+      {
+        ".properties.smtp_from": {
+          "value": $smtp_from
+        },
+        ".properties.smtp_address": {
+          "value": $smtp_address
+        },
+        ".properties.smtp_port": {
+          "value": $smtp_port
+        },
+        ".properties.smtp_credentials": {
+          "value": {
+            "identity": $smtp_user,
+            "password": $smtp_password
+          }
+        },
+        ".properties.smtp_enable_starttls_auto": {
+          "value": true
+        },
+        ".properties.smtp_auth_mechanism": {
+          "value": $smtp_auth_mechanism
+        }
+      }
+    else
+      .
+    end
+
+    +
+
+    # SSL Termination
+    {
+      ".properties.networking_point_of_entry": { "value": "external_ssl" },
+      ".properties.networking_point_of_entry.external_ssl.ssl_rsa_certificate": {
+        "value": {
+          "cert_pem": $cert_pem,
+          "private_key_pem": $private_key_pem
+        }
+      }
+    }
+
+
     '
 )
 
