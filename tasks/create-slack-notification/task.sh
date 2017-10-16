@@ -11,10 +11,10 @@ release_notes=$(cat pivnet-product/metadata.json | jq .Release.ReleaseNotesURL)
 cat > notification-text/text <<EOF
   [
     {
-      "fallback": "$(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"') has been updated in the $(echo $FOUNDATION_NAME | tr -d '\"') foundation.",
+      "fallback": "$(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"') has been upgraded in the $(echo $FOUNDATION_NAME | tr -d '\"') foundation.",
       "color": "#00ff00",
       "title": "Upgrade Pipeline Success - $(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"')",
-      "text": "$(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"') has been updated in the $(echo $FOUNDATION_NAME | tr -d '\"') foundation.",
+      "text": "$(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"') has been upgraded in the $(echo $FOUNDATION_NAME | tr -d '\"') foundation.",
       "fields": [
         {
           "title": "Release",
