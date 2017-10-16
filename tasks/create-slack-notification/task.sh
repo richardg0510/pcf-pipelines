@@ -8,7 +8,7 @@ release_date=$(cat pivnet-product/metadata.json | jq .Release.ReleaseDate)
 release_description=$(cat pivnet-product/metadata.json | jq .Release.Description)
 release_notes=$(cat pivnet-product/metadata.json | jq .Release.ReleaseNotesURL)
 
-cat > notification-text/text <<EOF
+cat > notification-text <<EOF
   [
     {
       "fallback": "$(echo $PRODUCT_FRIENDLY_NAME | tr -d '\"') has been upgraded in the $(echo $FOUNDATION_NAME | tr -d '\"') foundation.",
