@@ -8,6 +8,7 @@ image_resource:
 
 inputs:
 - name: pivnet-product
+- name: pcf-pipelines
 
 outputs:
 - name: notification-text
