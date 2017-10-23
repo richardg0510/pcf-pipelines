@@ -23,10 +23,14 @@ inputs:
   - name: pcf-pipelines
   - name: stemcells
 
+outputs:
+- name: notification-text
+
 params:
   OPSMAN_USERNAME:
   OPSMAN_PASSWORD:
   OPSMAN_DOMAIN_OR_IP_ADDRESS:
-
+  FOUNDATION_NAME:
+    
 run:
   path: pcf-pipelines/tasks/upgrade-stemcells/task.sh
