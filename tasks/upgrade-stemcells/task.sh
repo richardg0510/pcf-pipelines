@@ -45,7 +45,7 @@ function main() {
 
     OUTPUT=$OUTPUT'{
       "title": "Stemcell",
-      "value": "'$(echo $stemcell)'",
+      "value": "'$(echo $stemcell | cut -d: -f2)'",
       "short": false
     },'
   done
@@ -53,11 +53,11 @@ function main() {
   OUTPUT=$(echo "${OUTPUT::-1}")'     ],
        "footer": "Pipeline Success"
      }
-   ]'
+  ]'
 
-  cat > notification-text/text <<EOF
-    $OUTPUT
-  EOF
+cat > foundation-text/text <<EOF
+  $OUTPUT
+EOF
 }
 
 main "${PWD}"
