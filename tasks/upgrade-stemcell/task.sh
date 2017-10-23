@@ -25,12 +25,19 @@ diagnostic_report=$(
     curl --silent --path "/api/v0/diagnostic_report"
 )
 
-stemcell=$(
+stemcell_file=$(echo $(ls stemcell/ -R | grep "\.tgz$"))
+
+stemcell_version=$(
   echo $diagnostic_report |
   jq \
-    --arg version "$STEMCELL_VERSION" \
-    --arg glob "$IAAS" \
-  '.stemcells[] | select(contains($version) and contains($glob))'
+    --arg stemcell_file "$stemcell_file" \
+  '.stemcells[] | select(contains($stemcell_file))'
 )
 
-ls stemcell
+if [[ -z "$stemcell_version" ]]; then
+  echo "Uploading stemcell $stemcell_file."
+  FILE_PATH=`find ./stemcell -name *.tgz`
+  om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k upload-stemcell -s $SC_FILE_PATH
+else
+  echo "Stemcell $stemcell_file already uploaded."
+fi
