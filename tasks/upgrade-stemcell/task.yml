@@ -20,17 +20,14 @@ image_resource:
   source: {repository: czero/cflinuxfs2}
 
 inputs:
-  - name: pcf-pipelines
-  - name: stemcells
-
-outputs:
-- name: notification-text
+- name: pcf-pipelines
+- name: stemcell
 
 params:
   OPSMAN_USERNAME:
   OPSMAN_PASSWORD:
   OPSMAN_DOMAIN_OR_IP_ADDRESS:
-  FOUNDATION_NAME:
-    
+  PIVNET_API_TOKEN:
+
 run:
-  path: pcf-pipelines/tasks/upgrade-stemcells/task.sh
+  path: pcf-pipelines/tasks/upgrade-stemcell/task.sh
