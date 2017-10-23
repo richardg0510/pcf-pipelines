@@ -36,11 +36,26 @@ function main() {
 
   mkdir -p "$download_dir"
 
-  # extract the stemcell version from the filename, e.g. 3312.21, and download the file from pivnet
+  # extract the major stemcell version from the filename, e.g. 3312.21, find the latest dot version for that major, and download the file from pivnet
   for stemcell in "${stemcells[@]}"; do
-    local stemcell_version
-    stemcell_version=$(echo "$stemcell" | grep -Eo "[0-9]+(\.[0-9]+)?")
-    download_stemcell_version $stemcell_version
+    local current_stemcell_version
+    current_stemcell_version=$(echo $(echo "$stemcell" | grep -Eo "[0-9]+(\.[0-9]+)?") | cut -d ' ' -f1)
+
+    local stemcell_major_version
+    stemcell_major_version=$(echo $(echo "$stemcell" | grep -Eo "[0-9]+(\.[0-9]+)?") | cut -d. -f1)
+
+    local upgrade_stemcell_version
+    upgrade_stemcell_version=$(pivnet releases -p stemcells | grep -v + | grep -v VERSION | awk -F\| '{print $3}' | sed -e "s/ //g" | awk '$1 ~ /^'"$stemcell_major_version"'/' | awk 'NR==1{print $1}')
+    if [ "$upgrade_stemcell_version" != "" ] && [ "$upgrade_stemcell_version" != "$current_stemcell_version" ]; then
+      download_stemcell_version $upgrade_stemcell_version
+    else
+      upgrade_stemcell_version=$(pivnet releases -p stemcells-windows-server | grep -v + | grep -v VERSION | awk -F\| '{print $3}' | sed -e "s/ //g" | awk '$1 ~ /^'"$stemcell_major_version"'/' | awk 'NR==1{print $1}')
+      if [ "$upgrade_stemcell_version" != "" ] && [ "$upgrade_stemcell_version" != "$current_stemcell_version" ]; then
+        download_stemcell_version_windows $upgrade_stemcell_version
+      fi
+    fi
+
+    echo -------------------------------
   done
 }
 
@@ -55,8 +70,7 @@ function download_stemcell_version() {
 
   # ensure the stemcell version found in the manifest exists on pivnet
   if [[ $(pivnet-cli pfs -p stemcells -r "$stemcell_version") == *"release not found"* ]]; then
-    download_stemcell_version_windows $stemcell_version
-    return 0
+    abort "Could not find the required stemcell version ${stemcell_version}. This version might not be published on PivNet yet, try again later."
   fi
 
   # loop over all the stemcells for the specified version and then download it if it's for the IaaS we're targeting
