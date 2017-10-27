@@ -36,7 +36,7 @@ stemcell_version=$(
 
 if [[ -z "$stemcell_version" ]]; then
   echo "Uploading stemcell $stemcell_file."
-  FILE_PATH=`find ./stemcell -name *.tgz`
+  SC_FILE_PATH=`find ./stemcell -name *.tgz`
   om-linux -t https://$OPSMAN_DOMAIN_OR_IP_ADDRESS -u $OPS_MGR_USR -p $OPS_MGR_PWD -k upload-stemcell -s $SC_FILE_PATH
 else
   echo "Stemcell $stemcell_file already uploaded."
